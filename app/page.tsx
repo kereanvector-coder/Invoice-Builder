@@ -265,11 +265,16 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-white/10 bg-[#0A0A0A] py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded flex items-center justify-center">
-              <FileText size={12} className="text-white" />
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded flex items-center justify-center">
+                <FileText size={12} className="text-white" />
+              </div>
+              <span className="font-semibold text-white tracking-tight">Invoicer</span>
             </div>
-            <span className="font-semibold text-white tracking-tight">Invoicer</span>
+            <div className="text-gray-500 text-sm mt-2">
+              Designed & Built by ZedTech +2348060541643
+            </div>
           </div>
           <div className="text-gray-500 text-sm">
             &copy; {new Date().getFullYear()} Invoicer. All rights reserved.

@@ -143,6 +143,10 @@ export default function Home() {
           </div>
         )}
       </div>
+      
+      <div className="max-w-5xl mx-auto mt-12 text-center text-sm text-gray-400 pb-8">
+        Designed & Built by ZedTech +2348060541643
+      </div>
     </div>
   );
 }

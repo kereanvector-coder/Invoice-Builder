@@ -59,22 +59,99 @@ export default function InvoiceEditor({ invoice }: { invoice: Invoice }) {
 
   return (
     <div className="space-y-6 md:space-y-8 pb-20">
+      {/* Template Selection */}
+      <section className="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-100">
+        <h2 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Template</h2>
+        <div className="flex overflow-x-auto pb-4 gap-4 snap-x hide-scrollbar">
+          {TEMPLATES.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => updateInvoice(invoice.id, { template: t.id })}
+              className={`flex-shrink-0 w-36 h-28 rounded-xl border-2 flex flex-col items-center justify-center gap-3 transition-all snap-start relative overflow-hidden group ${
+                invoice.template === t.id
+                  ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-md scale-105'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              {/* Mini representation of the template */}
+              <div className="w-16 h-12 bg-white shadow-sm border border-gray-100 rounded flex flex-col p-1 gap-0.5 opacity-80 group-hover:opacity-100 transition-opacity">
+                {t.id === 'classic' && (
+                  <>
+                    <div className="w-full flex justify-between"><div className="w-4 h-1 bg-gray-300 rounded"></div><div className="w-6 h-2 bg-gray-800 rounded"></div></div>
+                    <div className="w-full h-px bg-gray-200 my-0.5"></div>
+                    <div className="w-full h-4 bg-gray-50 rounded mt-auto"></div>
+                  </>
+                )}
+                {t.id === 'minimal' && (
+                  <>
+                    <div className="w-full flex justify-between items-end"><div className="w-8 h-2 bg-gray-800 rounded"></div><div className="w-4 h-1 bg-gray-300 rounded"></div></div>
+                    <div className="w-full h-px bg-gray-100 my-1"></div>
+                    <div className="w-full h-2 bg-gray-50 rounded mt-auto"></div>
+                  </>
+                )}
+                {t.id === 'bold' && (
+                  <>
+                    <div className="w-full h-3 bg-black rounded-t flex justify-between items-center px-1"><div className="w-4 h-1 bg-white rounded"></div></div>
+                    <div className="w-full flex gap-1 mt-1"><div className="w-1/2 h-4 bg-gray-100 rounded border-l-2 border-black"></div><div className="w-1/2 h-4 bg-gray-100 rounded border-l-2 border-black"></div></div>
+                  </>
+                )}
+                {t.id === 'corporate' && (
+                  <>
+                    <div className="w-full flex justify-between border-b border-gray-800 pb-0.5"><div className="w-6 h-1 bg-gray-800 rounded"></div><div className="w-4 h-1 bg-gray-400 rounded"></div></div>
+                    <div className="w-full h-2 bg-gray-800 rounded mt-1"></div>
+                  </>
+                )}
+                {t.id === 'creative' && (
+                  <>
+                    <div className="w-full flex justify-between"><div className="w-6 h-2 bg-indigo-500 rounded"></div><div className="w-4 h-4 bg-white border border-gray-200 rounded-full"></div></div>
+                    <div className="w-full h-3 bg-indigo-500 rounded mt-auto transform -rotate-1"></div>
+                  </>
+                )}
+                {t.id === 'futuristic' && (
+                  <div className="absolute inset-0 bg-slate-900 p-1 flex flex-col gap-0.5">
+                    <div className="w-full flex justify-between"><div className="w-4 h-1 bg-white rounded"></div><div className="w-6 h-2 bg-cyan-400 rounded"></div></div>
+                    <div className="w-full h-4 bg-slate-800 border border-slate-700 rounded mt-auto"></div>
+                  </div>
+                )}
+                {t.id === 'ecommerce' && (
+                  <>
+                    <div className="w-full flex gap-1 items-center bg-gray-50 p-0.5 rounded"><div className="w-3 h-3 bg-blue-500 rounded"></div><div className="w-6 h-1 bg-gray-800 rounded"></div></div>
+                    <div className="w-full h-3 bg-gray-100 rounded mt-auto"></div>
+                  </>
+                )}
+                {t.id === 'elegant' && (
+                  <div className="absolute inset-0 bg-[#fdfbf7] border-2 border-white p-1 flex flex-col items-center justify-center gap-1">
+                    <div className="w-6 h-1 bg-[#2c3e50] rounded"></div>
+                    <div className="w-4 h-px bg-[#d5d1c8]"></div>
+                    <div className="w-8 h-2 bg-[#f0eee9] rounded mt-1"></div>
+                  </div>
+                )}
+                {t.id === 'startup' && (
+                  <>
+                    <div className="w-full flex justify-between items-center"><div className="w-3 h-3 bg-emerald-400 rounded"></div><div className="w-6 h-2 bg-emerald-50 rounded-full"></div></div>
+                    <div className="w-full h-3 bg-gray-50 rounded mt-auto"></div>
+                  </>
+                )}
+                {t.id === 'monospace' && (
+                  <div className="absolute inset-0 bg-white border-2 border-black p-1 flex flex-col gap-0.5">
+                    <div className="w-full flex justify-between border-b border-black pb-0.5"><div className="w-4 h-1 bg-black rounded"></div><div className="w-6 h-2 bg-black rounded"></div></div>
+                    <div className="w-full h-2 border border-dashed border-gray-300 rounded mt-auto"></div>
+                  </div>
+                )}
+              </div>
+              <span className="font-semibold text-sm">{t.name}</span>
+              {invoice.template === t.id && (
+                <div className="absolute top-2 right-2 w-2 h-2 bg-blue-600 rounded-full"></div>
+              )}
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* Settings Section */}
       <section className="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-100">
         <h2 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Settings</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Template</label>
-            <select
-              value={invoice.template}
-              onChange={(e) => updateInvoice(invoice.id, { template: e.target.value as InvoiceTemplate })}
-              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
-            >
-              {TEMPLATES.map((t) => (
-                <option key={t.id} value={t.id}>{t.name}</option>
-              ))}
-            </select>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
             <select

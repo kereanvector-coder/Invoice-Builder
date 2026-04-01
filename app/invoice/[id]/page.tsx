@@ -194,6 +194,10 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
           </div>
         )}
       </main>
+      
+      <div className="text-center text-sm text-gray-400 pb-8 pt-4">
+        Designed & Built by ZedTech +2348060541643
+      </div>
     </div>
   );
 }
