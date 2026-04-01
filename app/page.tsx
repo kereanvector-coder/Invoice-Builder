@@ -150,10 +150,10 @@ export default function LandingPage() {
                   <Sparkles className="text-indigo-400" size={24} />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">AI-Powered Generation</h3>
-                <p className="text-gray-400 max-w-md">Type "Built a website for 50 hours at $100/hr" and watch as our AI instantly creates perfectly formatted line items, calculates totals, and applies taxes.</p>
+                <p className="text-gray-400 max-w-md">Type &quot;Built a website for 50 hours at $100/hr&quot; and watch as our AI instantly creates perfectly formatted line items, calculates totals, and applies taxes.</p>
               </div>
               <div className="mt-8 p-4 rounded-xl bg-black/50 border border-white/5 font-mono text-sm text-gray-300">
-                <span className="text-indigo-400">Prompt:</span> "Redesigned landing page, 12 hours at $150/hr"
+                <span className="text-indigo-400">Prompt:</span> &quot;Redesigned landing page, 12 hours at $150/hr&quot;
                 <br/>
                 <span className="text-green-400 mt-2 block">→ Generated: Line Item 1 | Qty: 12 | Rate: $150 | Total: $1,800</span>
               </div>
@@ -206,7 +206,7 @@ export default function LandingPage() {
                   <Shield className="text-emerald-400" size={24} />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">Private & Secure</h3>
-                <p className="text-gray-400 max-w-md">No sign-up required. Your data is stored securely in your browser. We don't track your clients or your revenue.</p>
+                <p className="text-gray-400 max-w-md">No sign-up required. Your data is stored securely in your browser. We don&apos;t track your clients or your revenue.</p>
               </div>
               <div className="flex-1 w-full flex justify-end">
                  <div className="w-full max-w-[200px] h-32 bg-black/50 border border-white/10 rounded-xl p-4 flex flex-col gap-3">

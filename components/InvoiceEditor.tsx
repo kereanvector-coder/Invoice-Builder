@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { useAppStore } from '@/lib/store';
 import { Invoice, Currency, InvoiceTemplate, InvoiceStatus, Client } from '@/lib/types';
-import { Plus, Trash2, Upload, Save } from 'lucide-react';
+import { Plus, Trash2, Upload, Save, X, Settings } from 'lucide-react';
 
 const CURRENCIES: { code: Currency; symbol: string; name: string }[] = [
   { code: 'USD', symbol: '$', name: 'US Dollar' },
@@ -23,6 +24,8 @@ const TEMPLATES: { id: InvoiceTemplate; name: string }[] = [
   { id: 'elegant', name: 'Elegant' },
   { id: 'startup', name: 'Startup' },
   { id: 'monospace', name: 'Monospace' },
+  { id: 'modern', name: 'Modern' },
+  { id: 'playful', name: 'Playful' },
 ];
 
 const STATUSES: InvoiceStatus[] = ['Draft', 'Proforma', 'Final', 'Sent', 'Paid', 'Overdue'];
@@ -44,7 +47,44 @@ const calculateDueDate = (issueDate: string, term: string) => {
 };
 
 export default function InvoiceEditor({ invoice }: { invoice: Invoice }) {
-  const { updateInvoice, addLineItem, updateLineItem, removeLineItem, clients, addClient } = useAppStore();
+  const { updateInvoice, addLineItem, updateLineItem, removeLineItem, clients, addClient, invoicePrefix, invoiceNextNumber, updateSettings } = useAppStore();
+  const [isNewClientModalOpen, setIsNewClientModalOpen] = useState(false);
+  const [newClientForm, setNewClientForm] = useState({ name: '', email: '', address: '', phone: '' });
+  
+  const [isNumberingModalOpen, setIsNumberingModalOpen] = useState(false);
+  const [numberingForm, setNumberingForm] = useState({ prefix: invoicePrefix, nextNumber: invoiceNextNumber });
+
+  const handleSaveNumbering = () => {
+    updateSettings({
+      invoicePrefix: numberingForm.prefix,
+      invoiceNextNumber: Number(numberingForm.nextNumber) || 1
+    });
+    setIsNumberingModalOpen(false);
+  };
+
+  const handleSaveNewClient = () => {
+    if (!newClientForm.name) {
+      alert('Please enter a client name.');
+      return;
+    }
+    
+    addClient({
+      name: newClientForm.name,
+      email: newClientForm.email,
+      address: newClientForm.address,
+      phone: newClientForm.phone,
+    });
+    
+    updateInvoice(invoice.id, {
+      toName: newClientForm.name,
+      toEmail: newClientForm.email,
+      toAddress: newClientForm.address,
+      toPhone: newClientForm.phone,
+    });
+
+    setIsNewClientModalOpen(false);
+    setNewClientForm({ name: '', email: '', address: '', phone: '' });
+  };
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -138,6 +178,18 @@ export default function InvoiceEditor({ invoice }: { invoice: Invoice }) {
                     <div className="w-full h-2 border border-dashed border-gray-300 rounded mt-auto"></div>
                   </div>
                 )}
+                {t.id === 'modern' && (
+                  <div className="absolute inset-0 bg-white p-1 flex flex-col gap-0.5">
+                    <div className="w-full flex justify-between"><div className="w-4 h-4 bg-blue-100 rounded-full"></div><div className="w-6 h-2 bg-blue-600 rounded"></div></div>
+                    <div className="w-full h-3 bg-gray-50 rounded mt-auto border-l-2 border-blue-600"></div>
+                  </div>
+                )}
+                {t.id === 'playful' && (
+                  <div className="absolute inset-0 bg-yellow-50 p-1 flex flex-col gap-0.5">
+                    <div className="w-full flex justify-between"><div className="w-6 h-2 bg-pink-400 rounded-full transform -rotate-3"></div><div className="w-4 h-4 bg-teal-400 rounded-full"></div></div>
+                    <div className="w-full h-3 bg-white rounded-xl mt-auto border-2 border-purple-400"></div>
+                  </div>
+                )}
               </div>
               <span className="font-semibold text-sm">{t.name}</span>
               {invoice.template === t.id && (
@@ -177,7 +229,19 @@ export default function InvoiceEditor({ invoice }: { invoice: Invoice }) {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Invoice Number</label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-sm font-medium text-gray-700">Invoice Number</label>
+              <button
+                onClick={() => {
+                  setNumberingForm({ prefix: invoicePrefix, nextNumber: invoiceNextNumber });
+                  setIsNumberingModalOpen(true);
+                }}
+                className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1 font-medium"
+              >
+                <Settings size={12} />
+                Configure
+              </button>
+            </div>
             <input
               type="text"
               value={invoice.invoiceNumber}
@@ -266,28 +330,32 @@ export default function InvoiceEditor({ invoice }: { invoice: Invoice }) {
               </button>
             </div>
             
-            {clients.length > 0 && (
-              <select
-                className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border text-sm bg-gray-50"
-                onChange={(e) => {
-                  const client = clients.find(c => c.id === e.target.value);
-                  if (client) {
-                    updateInvoice(invoice.id, {
-                      toName: client.name,
-                      toEmail: client.email,
-                      toAddress: client.address,
-                      toPhone: client.phone,
-                    });
-                  }
-                }}
-                defaultValue=""
-              >
-                <option value="" disabled>Select a saved client...</option>
-                {clients.map(client => (
-                  <option key={client.id} value={client.id}>{client.name}</option>
-                ))}
-              </select>
-            )}
+            <select
+              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border text-sm bg-gray-50"
+              onChange={(e) => {
+                if (e.target.value === 'NEW_CLIENT') {
+                  setIsNewClientModalOpen(true);
+                  e.target.value = "";
+                  return;
+                }
+                const client = clients.find(c => c.id === e.target.value);
+                if (client) {
+                  updateInvoice(invoice.id, {
+                    toName: client.name,
+                    toEmail: client.email,
+                    toAddress: client.address,
+                    toPhone: client.phone,
+                  });
+                }
+              }}
+              defaultValue=""
+            >
+              <option value="" disabled>Select a saved client...</option>
+              {clients.map(client => (
+                <option key={client.id} value={client.id}>{client.name}</option>
+              ))}
+              <option value="NEW_CLIENT" className="font-semibold text-blue-600">+ Add New Client...</option>
+            </select>
 
             <input
               type="text"
@@ -502,6 +570,141 @@ export default function InvoiceEditor({ invoice }: { invoice: Invoice }) {
           </div>
         </div>
       </section>
+
+      {/* New Client Modal */}
+      {isNewClientModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+            <div className="flex justify-between items-center p-4 border-b border-gray-100">
+              <h3 className="text-lg font-semibold text-gray-900">Add New Client</h3>
+              <button
+                onClick={() => setIsNewClientModalOpen(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-4 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Client Name / Company *</label>
+                <input
+                  type="text"
+                  value={newClientForm.name}
+                  onChange={(e) => setNewClientForm({ ...newClientForm, name: e.target.value })}
+                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                  placeholder="Acme Corp"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <input
+                  type="email"
+                  value={newClientForm.email}
+                  onChange={(e) => setNewClientForm({ ...newClientForm, email: e.target.value })}
+                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                  placeholder="billing@acmecorp.com"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <textarea
+                  value={newClientForm.address}
+                  onChange={(e) => setNewClientForm({ ...newClientForm, address: e.target.value })}
+                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border resize-none"
+                  rows={2}
+                  placeholder="123 Business Rd&#10;Suite 100"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <input
+                  type="tel"
+                  value={newClientForm.phone}
+                  onChange={(e) => setNewClientForm({ ...newClientForm, phone: e.target.value })}
+                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                  placeholder="+1 (555) 123-4567"
+                />
+              </div>
+            </div>
+            <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+              <button
+                onClick={() => setIsNewClientModalOpen(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveNewClient}
+                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Save Client
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Numbering Settings Modal */}
+      {isNumberingModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden">
+            <div className="flex justify-between items-center p-4 border-b border-gray-100">
+              <h3 className="text-lg font-semibold text-gray-900">Invoice Numbering</h3>
+              <button
+                onClick={() => setIsNumberingModalOpen(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-4 space-y-4">
+              <p className="text-sm text-gray-500">
+                Configure how new invoice numbers are generated. This will apply to all future invoices.
+              </p>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Prefix</label>
+                <input
+                  type="text"
+                  value={numberingForm.prefix}
+                  onChange={(e) => setNumberingForm({ ...numberingForm, prefix: e.target.value })}
+                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                  placeholder="INV-"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Next Number</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={numberingForm.nextNumber}
+                  onChange={(e) => setNumberingForm({ ...numberingForm, nextNumber: Number(e.target.value) })}
+                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                />
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                <span className="text-xs text-gray-500 block mb-1">Preview of next invoice:</span>
+                <span className="font-mono font-medium text-gray-900">
+                  {numberingForm.prefix}{(Number(numberingForm.nextNumber) || 1).toString().padStart(4, '0')}
+                </span>
+              </div>
+            </div>
+            <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+              <button
+                onClick={() => setIsNumberingModalOpen(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveNumbering}
+                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Save Settings
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -37,6 +37,10 @@ export default function InvoicePreview({ invoice }: { invoice: Invoice }) {
         return <StartupTemplate invoice={invoice} formatCurrency={formatCurrency} subtotal={subtotal} discountAmount={discountAmount} taxAmount={taxAmount} total={total} invoiceTitle={invoiceTitle} />;
       case 'monospace':
         return <MonospaceTemplate invoice={invoice} formatCurrency={formatCurrency} subtotal={subtotal} discountAmount={discountAmount} taxAmount={taxAmount} total={total} invoiceTitle={invoiceTitle} />;
+      case 'modern':
+        return <ModernTemplate invoice={invoice} formatCurrency={formatCurrency} subtotal={subtotal} discountAmount={discountAmount} taxAmount={taxAmount} total={total} invoiceTitle={invoiceTitle} />;
+      case 'playful':
+        return <PlayfulTemplate invoice={invoice} formatCurrency={formatCurrency} subtotal={subtotal} discountAmount={discountAmount} taxAmount={taxAmount} total={total} invoiceTitle={invoiceTitle} />;
       case 'classic':
       default:
         return <ClassicTemplate invoice={invoice} formatCurrency={formatCurrency} subtotal={subtotal} discountAmount={discountAmount} taxAmount={taxAmount} total={total} invoiceTitle={invoiceTitle} />;
@@ -1119,6 +1123,262 @@ function StartupTemplate({ invoice, formatCurrency, subtotal, discountAmount, ta
       
       <div className="mt-auto text-center text-sm text-gray-400 border-t border-gray-100 pt-8">
         Thank you for your business!
+      </div>
+    </div>
+  );
+}
+
+function ModernTemplate({ invoice, formatCurrency, subtotal, discountAmount, taxAmount, total, invoiceTitle }: TemplateProps) {
+  return (
+    <div className="font-sans bg-white text-gray-900 min-h-full flex flex-col p-12 relative overflow-hidden">
+      {/* Decorative background element */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-bl-full -z-10"></div>
+      
+      <div className="flex justify-between items-start mb-16">
+        <div>
+          {invoice.logoUrl ? (
+            <div className="relative h-16 w-40 mb-6">
+              <img src={invoice.logoUrl} alt="Logo" className="absolute inset-0 w-full h-full object-contain object-left" />
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md">
+                {invoice.fromName.charAt(0)}
+              </div>
+              <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{invoice.fromName}</h1>
+            </div>
+          )}
+          <div className="text-sm text-gray-600 whitespace-pre-wrap leading-relaxed border-l-2 border-blue-600 pl-3">
+            {invoice.fromAddress}
+            <br />
+            {invoice.fromEmail}
+            <br />
+            {invoice.fromPhone}
+          </div>
+        </div>
+        <div className="text-right">
+          <h2 className="text-4xl font-black text-blue-600 uppercase tracking-tight mb-2">{invoiceTitle}</h2>
+          <div className="text-lg font-medium text-gray-900 mb-6">#{invoice.invoiceNumber}</div>
+          
+          <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 inline-block text-left">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
+              <div className="text-gray-500">Issue Date</div>
+              <div className="font-medium text-right">{format(new Date(invoice.issueDate), 'MMM dd, yyyy')}</div>
+              <div className="text-gray-500">Due Date</div>
+              <div className="font-medium text-right">{format(new Date(invoice.dueDate), 'MMM dd, yyyy')}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-12">
+        <h3 className="text-sm font-bold text-blue-600 uppercase tracking-wider mb-4 flex items-center gap-2">
+          <span className="w-6 h-px bg-blue-600"></span> Billed To
+        </h3>
+        <div className="text-gray-900">
+          <div className="font-bold text-lg mb-1">{invoice.toName}</div>
+          <div className="text-gray-600 text-sm whitespace-pre-wrap mb-1">{invoice.toAddress}</div>
+          <div className="text-gray-500 text-sm">{invoice.toEmail}</div>
+        </div>
+      </div>
+
+      <div className="mb-12 flex-grow">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b-2 border-gray-900 text-sm font-bold text-gray-900">
+              <th className="text-left py-3 px-2">Description</th>
+              <th className="text-center py-3 px-2 w-24">Qty</th>
+              <th className="text-right py-3 px-2 w-32">Rate</th>
+              <th className="text-right py-3 px-2 w-32">Amount</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {invoice.items.map((item, i) => (
+              <tr key={i} className="text-sm group hover:bg-gray-50 transition-colors">
+                <td className="py-4 px-2 font-medium">{item.description}</td>
+                <td className="py-4 px-2 text-center text-gray-600">{item.quantity}</td>
+                <td className="py-4 px-2 text-right text-gray-600">{formatCurrency(item.rate)}</td>
+                <td className="py-4 px-2 text-right font-bold text-gray-900">{formatCurrency(item.amount)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex justify-between items-start mb-12">
+        <div className="w-1/2 pr-12">
+          {invoice.paymentInfo && (
+            <div className="mb-6">
+              <h4 className="text-sm font-bold text-gray-900 mb-2">Payment Info</h4>
+              <p className="text-sm text-gray-600 whitespace-pre-wrap bg-gray-50 p-4 rounded-xl">{invoice.paymentInfo}</p>
+            </div>
+          )}
+          {invoice.notes && (
+            <div>
+              <h4 className="text-sm font-bold text-gray-900 mb-2">Notes</h4>
+              <p className="text-sm text-gray-600 whitespace-pre-wrap">{invoice.notes}</p>
+            </div>
+          )}
+        </div>
+        <div className="w-80">
+          <div className="space-y-3 mb-4 text-sm">
+            <div className="flex justify-between text-gray-600">
+              <span>Subtotal</span>
+              <span className="font-medium text-gray-900">{formatCurrency(subtotal)}</span>
+            </div>
+            {invoice.discountPercent > 0 && (
+              <div className="flex justify-between text-gray-600">
+                <span>Discount ({invoice.discountPercent}%)</span>
+                <span className="font-medium text-red-500">-{formatCurrency(discountAmount)}</span>
+              </div>
+            )}
+            {invoice.taxPercent > 0 && (
+              <div className="flex justify-between text-gray-600">
+                <span>Tax ({invoice.taxPercent}%)</span>
+                <span className="font-medium text-gray-900">{formatCurrency(taxAmount)}</span>
+              </div>
+            )}
+          </div>
+          <div className="flex justify-between items-center py-4 border-t-2 border-gray-900 bg-gray-50 px-4 rounded-xl">
+            <span className="text-base font-bold text-gray-900">Total</span>
+            <span className="text-2xl font-black text-blue-600">{formatCurrency(total)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PlayfulTemplate({ invoice, formatCurrency, subtotal, discountAmount, taxAmount, total, invoiceTitle }: TemplateProps) {
+  return (
+    <div className="font-sans bg-[#fffdf7] text-gray-800 min-h-full flex flex-col p-12 relative overflow-hidden">
+      {/* Decorative blobs */}
+      <div className="absolute -top-20 -left-20 w-64 h-64 bg-pink-200 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob"></div>
+      <div className="absolute top-0 -right-20 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-2000"></div>
+      <div className="absolute -bottom-32 left-20 w-80 h-80 bg-teal-200 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-4000"></div>
+
+      <div className="relative z-10 flex justify-between items-start mb-16">
+        <div className="bg-white/80 backdrop-blur-sm p-6 rounded-3xl shadow-sm border border-white/50 max-w-[50%]">
+          {invoice.logoUrl ? (
+            <div className="relative h-16 w-40 mb-4">
+              <img src={invoice.logoUrl} alt="Logo" className="absolute inset-0 w-full h-full object-contain object-left" />
+            </div>
+          ) : (
+            <h1 className="text-3xl font-black text-gray-900 mb-2 tracking-tight">{invoice.fromName}</h1>
+          )}
+          <div className="text-sm text-gray-600 whitespace-pre-wrap font-medium">{invoice.fromAddress}</div>
+          <div className="text-sm text-gray-500 mt-1">{invoice.fromEmail}</div>
+          <div className="text-sm text-gray-500">{invoice.fromPhone}</div>
+        </div>
+        
+        <div className="text-right">
+          <div className="inline-block bg-gray-900 text-white px-6 py-2 rounded-full mb-4 transform rotate-2 shadow-lg">
+            <h2 className="text-2xl font-black uppercase tracking-widest">{invoiceTitle}</h2>
+          </div>
+          <div className="text-xl font-bold text-gray-800 mb-4">#{invoice.invoiceNumber}</div>
+          
+          <div className="flex flex-col gap-2 items-end text-sm font-medium">
+            <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-2xl shadow-sm border border-white/50 flex gap-4">
+              <span className="text-gray-500">Issued</span>
+              <span className="text-gray-900">{format(new Date(invoice.issueDate), 'MMM dd, yyyy')}</span>
+            </div>
+            <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-2xl shadow-sm border border-white/50 flex gap-4">
+              <span className="text-gray-500">Due</span>
+              <span className="text-gray-900">{format(new Date(invoice.dueDate), 'MMM dd, yyyy')}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative z-10 mb-12">
+        <div className="inline-block bg-pink-100 text-pink-800 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4 transform -rotate-1">
+          Billed To
+        </div>
+        <div className="bg-white/80 backdrop-blur-sm p-6 rounded-3xl shadow-sm border border-white/50 inline-block min-w-[300px]">
+          <div className="font-black text-xl text-gray-900 mb-1">{invoice.toName}</div>
+          <div className="text-gray-600 text-sm whitespace-pre-wrap font-medium mb-2">{invoice.toAddress}</div>
+          <div className="text-gray-500 text-sm">{invoice.toEmail}</div>
+        </div>
+      </div>
+
+      <div className="relative z-10 mb-12 flex-grow">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-sm border border-white/50 overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-gray-900 text-white">
+              <tr className="text-sm font-bold">
+                <th className="text-left py-4 px-6 rounded-tl-3xl">Description</th>
+                <th className="text-center py-4 px-6">Qty</th>
+                <th className="text-right py-4 px-6">Rate</th>
+                <th className="text-right py-4 px-6 rounded-tr-3xl">Amount</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {invoice.items.map((item, i) => (
+                <tr key={i} className="text-sm">
+                  <td className="py-4 px-6 font-bold text-gray-800">{item.description}</td>
+                  <td className="py-4 px-6 text-center text-gray-600 font-medium">{item.quantity}</td>
+                  <td className="py-4 px-6 text-right text-gray-600 font-medium">{formatCurrency(item.rate)}</td>
+                  <td className="py-4 px-6 text-right font-black text-gray-900">{formatCurrency(item.amount)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div className="relative z-10 flex justify-between items-start mb-12">
+        <div className="w-1/2 pr-12">
+          {invoice.paymentInfo && (
+            <div className="mb-6">
+              <div className="inline-block bg-teal-100 text-teal-800 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3 transform rotate-1">
+                Payment Info
+              </div>
+              <p className="text-sm text-gray-700 whitespace-pre-wrap bg-white/80 backdrop-blur-sm p-5 rounded-3xl shadow-sm border border-white/50 font-medium leading-relaxed">
+                {invoice.paymentInfo}
+              </p>
+            </div>
+          )}
+          {invoice.notes && (
+            <div>
+              <div className="inline-block bg-yellow-100 text-yellow-800 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3 transform -rotate-1">
+                Notes
+              </div>
+              <p className="text-sm text-gray-700 whitespace-pre-wrap font-medium leading-relaxed">
+                {invoice.notes}
+              </p>
+            </div>
+          )}
+        </div>
+        <div className="w-80 bg-white/80 backdrop-blur-sm rounded-3xl shadow-sm border border-white/50 p-6">
+          <div className="space-y-4 mb-6 text-sm font-medium">
+            <div className="flex justify-between text-gray-600">
+              <span>Subtotal</span>
+              <span className="text-gray-900">{formatCurrency(subtotal)}</span>
+            </div>
+            {invoice.discountPercent > 0 && (
+              <div className="flex justify-between text-gray-600">
+                <span>Discount</span>
+                <span className="text-pink-500 font-bold">-{formatCurrency(discountAmount)}</span>
+              </div>
+            )}
+            {invoice.taxPercent > 0 && (
+              <div className="flex justify-between text-gray-600">
+                <span>Tax</span>
+                <span className="text-gray-900">{formatCurrency(taxAmount)}</span>
+              </div>
+            )}
+          </div>
+          <div className="flex justify-between items-center pt-6 border-t-2 border-dashed border-gray-200">
+            <span className="text-lg font-black text-gray-900 uppercase tracking-wider">Total</span>
+            <span className="text-3xl font-black text-gray-900">{formatCurrency(total)}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div className="relative z-10 mt-auto text-center">
+        <span className="inline-block bg-gray-900 text-white px-6 py-2 rounded-full text-sm font-bold transform -rotate-2 shadow-md">
+          Thank you! 💖
+        </span>
       </div>
     </div>
   );

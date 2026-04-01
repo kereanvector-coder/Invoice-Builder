@@ -8,11 +8,16 @@ interface AppState {
   clients: Client[];
   currentInvoiceId: string | null;
   
+  // Global Settings
+  invoicePrefix: string;
+  invoiceNextNumber: number;
+  
   // Actions
   createInvoice: () => string;
   updateInvoice: (id: string, updates: Partial<Invoice>) => void;
   deleteInvoice: (id: string) => void;
   setCurrentInvoice: (id: string | null) => void;
+  updateSettings: (settings: { invoicePrefix?: string; invoiceNextNumber?: number }) => void;
   
   // Client Actions
   addClient: (client: Omit<Client, 'id' | 'createdAt'>) => void;
@@ -26,23 +31,27 @@ interface AppState {
   setLineItems: (invoiceId: string, items: LineItem[]) => void;
 }
 
-const generateInvoiceNumber = (invoices: Invoice[]) => {
-  const count = invoices.length + 1;
-  return `INV-${new Date().getFullYear()}-${count.toString().padStart(4, '0')}`;
-};
-
 export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
       invoices: [],
       clients: [],
       currentInvoiceId: null,
+      invoicePrefix: 'INV-',
+      invoiceNextNumber: 1,
       
       createInvoice: () => {
         const id = uuidv4();
+        const state = get();
+        
+        const prefix = state.invoicePrefix || 'INV-';
+        const nextNum = state.invoiceNextNumber || 1;
+        
+        const invoiceNumber = `${prefix}${nextNum.toString().padStart(4, '0')}`;
+        
         const newInvoice: Invoice = {
           id,
-          invoiceNumber: generateInvoiceNumber(get().invoices),
+          invoiceNumber,
           status: 'Draft',
           template: 'classic',
           currency: 'USD',
@@ -76,6 +85,7 @@ export const useAppStore = create<AppState>()(
         set((state) => ({
           invoices: [newInvoice, ...state.invoices],
           currentInvoiceId: id,
+          invoiceNextNumber: nextNum + 1,
         }));
         
         return id;
@@ -98,6 +108,13 @@ export const useAppStore = create<AppState>()(
       
       setCurrentInvoice: (id) => {
         set({ currentInvoiceId: id });
+      },
+      
+      updateSettings: (settings) => {
+        set((state) => ({
+          ...state,
+          ...settings,
+        }));
       },
       
       addClient: (client) => {

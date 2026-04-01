@@ -12,7 +12,9 @@ export type InvoiceTemplate =
   | 'ecommerce'
   | 'elegant'
   | 'startup'
-  | 'monospace';
+  | 'monospace'
+  | 'modern'
+  | 'playful';
 
 export interface Client {
   id: string;
