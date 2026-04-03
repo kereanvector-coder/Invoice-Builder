@@ -115,18 +115,18 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-4">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-0 sm:h-16 flex flex-wrap sm:flex-nowrap items-center justify-between gap-y-2">
+          <div className="flex items-center gap-1 sm:gap-4 order-1">
             <button
               onClick={() => router.push('/')}
-              className="p-2 -ml-2 text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
+              className="p-2 text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
               title="Back to Home"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </button>
             <button
               onClick={() => router.push('/dashboard')}
-              className="p-2 text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
+              className="p-2 text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors hidden sm:block"
               title="Back to Dashboard"
             >
               <ArrowLeft size={20} />
@@ -137,10 +137,10 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
           </div>
 
           {/* Mobile Tabs */}
-          <div className="flex lg:hidden bg-gray-100 p-1 rounded-lg">
+          <div className="flex lg:hidden bg-gray-100 p-1 rounded-lg w-full sm:w-auto order-3 sm:order-2">
             <button
               onClick={() => setActiveTab('edit')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              className={`flex-1 sm:flex-none flex justify-center items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                 activeTab === 'edit' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'
               }`}
             >
@@ -149,7 +149,7 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
             </button>
             <button
               onClick={() => setActiveTab('preview')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              className={`flex-1 sm:flex-none flex justify-center items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                 activeTab === 'preview' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'
               }`}
             >
@@ -158,17 +158,19 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
             </button>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1 sm:gap-3 order-2 sm:order-3">
             <button
               onClick={() => setShowAIPanel(!showAIPanel)}
-              className="flex items-center gap-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base"
+              className="flex items-center gap-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-2 sm:px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base"
+              title="Auto-fill"
             >
               <Sparkles size={18} className="text-indigo-500" />
               <span className="hidden sm:inline">Auto-fill</span>
             </button>
             <button
               onClick={() => setShowEmailModal(true)}
-              className="flex items-center gap-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base"
+              className="flex items-center gap-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-2 sm:px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base"
+              title="Send Email"
             >
               <Mail size={18} />
               <span className="hidden sm:inline">Send Email</span>
@@ -177,6 +179,7 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
               onClick={handleDownloadPDF}
               disabled={isGeneratingPDF}
               className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base"
+              title="Download PDF"
             >
               <Download size={18} />
               <span className="hidden sm:inline">
