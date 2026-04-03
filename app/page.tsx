@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { FileText, Sparkles, Download, Smartphone, ArrowRight, CheckCircle2, Zap, Shield, Globe, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
@@ -101,7 +102,7 @@ export default function LandingPage() {
           </Link>
         </motion.div>
 
-        {/* Hero Abstract Mockup */}
+        {/* Hero Image Mockup */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -109,36 +110,87 @@ export default function LandingPage() {
           className="w-full max-w-5xl mt-20 relative"
         >
           <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent z-10 h-full w-full pointer-events-none"></div>
-          <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#111111] shadow-2xl aspect-[16/9] md:aspect-[21/9] flex items-center justify-center">
-            {/* Abstract UI representation */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+          <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#111111] shadow-2xl aspect-[16/9] md:aspect-[21/9] flex items-center justify-center group">
             
-            <div className="relative w-3/4 max-w-2xl bg-[#1A1A1A] rounded-xl border border-white/10 p-6 shadow-2xl transform rotate-[-2deg] hover:rotate-0 transition-transform duration-700 ease-out">
-              <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+            <Image
+              src="https://images.unsplash.com/photo-1554774853-719586f82d77?auto=format&fit=crop&q=80&w=1200&h=800"
+              alt="Happy freelancer preparing an invoice on a smartphone"
+              fill
+              className="object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700"
+              referrerPolicy="no-referrer"
+            />
+            
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+
+            {/* Floating Invoice Template */}
+            <div className="absolute right-8 md:right-16 top-1/2 -translate-y-1/2 w-64 md:w-80 bg-white rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform rotate-[-2deg] group-hover:rotate-0 group-hover:scale-105 transition-all duration-700 ease-out overflow-hidden flex flex-col z-20">
+              {/* Invoice Header */}
+              <div className="h-16 bg-gradient-to-r from-indigo-500 to-purple-600 p-4 flex justify-between items-start text-white">
+                <div>
+                  <div className="font-bold text-xs">ZEDTECH</div>
+                  <div className="text-[8px] opacity-80">hello@zedtech.com</div>
                 </div>
-                <div className="w-24 h-4 bg-white/5 rounded-full"></div>
+                <div className="text-right">
+                  <div className="font-bold text-xs tracking-widest">INVOICE</div>
+                  <div className="text-[8px] opacity-80">INV-2026-001</div>
+                </div>
               </div>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div className="w-32 h-6 bg-white/10 rounded-md"></div>
-                  <div className="w-16 h-6 bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center rounded-md border border-indigo-500/30">PAID</div>
-                </div>
-                <div className="w-full h-px bg-white/5 my-4"></div>
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex justify-between items-center">
-                    <div className="flex gap-4 items-center w-2/3">
-                      <div className="w-8 h-8 rounded bg-white/5"></div>
-                      <div className="w-full h-4 bg-white/5 rounded"></div>
-                    </div>
-                    <div className="w-16 h-4 bg-white/5 rounded"></div>
+              {/* Invoice Body */}
+              <div className="p-4 flex-1 flex flex-col text-[8px] md:text-[10px] text-gray-600 leading-tight bg-white">
+                <div className="flex justify-between mb-4">
+                  <div>
+                    <div className="font-semibold text-gray-800 text-[9px] md:text-xs mb-1">Billed To:</div>
+                    <div>Acme Corporation</div>
+                    <div>123 Business Road</div>
                   </div>
-                ))}
+                  <div className="text-right">
+                    <div><span className="font-semibold">Date:</span> Apr 03, 2026</div>
+                    <div><span className="font-semibold">Due:</span> Apr 17, 2026</div>
+                  </div>
+                </div>
+                
+                <div className="w-full h-px bg-gray-200 mb-2"></div>
+                <div className="flex justify-between font-semibold text-gray-800 mb-2 px-1">
+                  <span>Description</span>
+                  <span>Amount</span>
+                </div>
+                <div className="w-full h-px bg-gray-200 mb-2"></div>
+                
+                <div className="flex justify-between mb-2 px-1">
+                  <span>Web Design</span>
+                  <span>$1,200.00</span>
+                </div>
+                <div className="flex justify-between mb-2 px-1">
+                  <span>SEO Optimization</span>
+                  <span>$800.00</span>
+                </div>
+                
+                <div className="w-full h-px bg-gray-200 my-2"></div>
+                <div className="flex justify-between font-bold text-gray-900 px-1 text-[10px] md:text-xs">
+                  <span>Total</span>
+                  <span>$2,000.00</span>
+                </div>
+                
+                <div className="mt-4 flex justify-center">
+                  <div className="bg-green-100 text-green-700 font-bold px-3 py-1 rounded-full text-[8px] md:text-[10px] flex items-center gap-1">
+                    <CheckCircle2 size={10} />
+                    PAID
+                  </div>
+                </div>
               </div>
             </div>
+
+            {/* Floating UI elements */}
+            <div className="absolute left-8 md:left-16 bottom-8 md:bottom-16 bg-white/10 backdrop-blur-md border border-white/20 p-3 md:p-4 rounded-xl flex items-center gap-3 md:gap-4 shadow-2xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-700 delay-100 z-20">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-green-500 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)]">
+                <CheckCircle2 size={20} className="text-white md:w-6 md:h-6" />
+              </div>
+              <div>
+                <div className="text-white font-bold text-sm md:text-base">Payment Received</div>
+                <div className="text-green-400 text-xs md:text-sm font-medium">$2,000.00 from Acme Corp</div>
+              </div>
+            </div>
+
           </div>
         </motion.div>
       </section>
@@ -541,7 +593,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="text-gray-500 text-sm">
-            &copy; {new Date().getFullYear()} Invoicer. All rights reserved.
+            &copy; {new Date().getFullYear()} Zedtech. All rights reserved.
           </div>
           <div className="flex gap-6 text-sm text-gray-500">
             <a href="#" className="hover:text-white transition-colors">Twitter</a>

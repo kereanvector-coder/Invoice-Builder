@@ -11,6 +11,7 @@ const CURRENCIES: { code: Currency; symbol: string; name: string }[] = [
   { code: 'AUD', symbol: '$', name: 'Australian Dollar' },
   { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
   { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
+  { code: 'NGN', symbol: '₦', name: 'Nigerian Naira' },
 ];
 
 const TEMPLATES: { id: InvoiceTemplate; name: string }[] = [
@@ -209,7 +210,7 @@ export default function InvoiceEditor({ invoice }: { invoice: Invoice }) {
             <select
               value={invoice.currency}
               onChange={(e) => updateInvoice(invoice.id, { currency: e.target.value as Currency })}
-              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border bg-white"
             >
               {CURRENCIES.map((c) => (
                 <option key={c.code} value={c.code}>{c.code} ({c.symbol}) - {c.name}</option>
@@ -221,7 +222,7 @@ export default function InvoiceEditor({ invoice }: { invoice: Invoice }) {
             <select
               value={invoice.status}
               onChange={(e) => updateInvoice(invoice.id, { status: e.target.value as InvoiceStatus })}
-              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border bg-white"
             >
               {STATUSES.map((s) => (
                 <option key={s} value={s}>{s}</option>
@@ -246,7 +247,7 @@ export default function InvoiceEditor({ invoice }: { invoice: Invoice }) {
               type="text"
               value={invoice.invoiceNumber}
               onChange={(e) => updateInvoice(invoice.id, { invoiceNumber: e.target.value })}
-              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border bg-white"
             />
           </div>
         </div>

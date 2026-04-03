@@ -1,4 +1,4 @@
-export type Currency = 'USD' | 'EUR' | 'GBP' | 'CAD' | 'AUD' | 'JPY' | 'INR';
+export type Currency = 'USD' | 'EUR' | 'GBP' | 'CAD' | 'AUD' | 'JPY' | 'INR' | 'NGN';
 
 export type InvoiceStatus = 'Draft' | 'Proforma' | 'Final' | 'Sent' | 'Paid' | 'Overdue';
 
