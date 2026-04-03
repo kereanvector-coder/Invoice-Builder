@@ -205,7 +205,7 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
         </div>
 
         {/* Preview Column */}
-        <div className={`lg:block ${activeTab === 'preview' ? 'block' : 'hidden'} overflow-hidden`}>
+        <div className={`lg:block ${activeTab === 'preview' ? 'block' : 'hidden'}`}>
           <div className="lg:sticky lg:top-24">
             <InvoicePreview invoice={invoice} />
           </div>

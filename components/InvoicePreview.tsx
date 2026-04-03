@@ -1,8 +1,45 @@
 /* eslint-disable @next/next/no-img-element */
 import { Invoice } from '@/lib/types';
 import { format } from 'date-fns';
+import { useEffect, useRef, useState } from 'react';
 
 export default function InvoicePreview({ invoice }: { invoice: Invoice }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const invoiceRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  const [invoiceHeight, setInvoiceHeight] = useState(1123);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const containerWidth = entry.contentRect.width;
+        const newScale = Math.min(1, containerWidth / 794);
+        setScale(newScale);
+      }
+    });
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const invoiceEl = invoiceRef.current;
+    if (!invoiceEl) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const target = entry.target as HTMLElement;
+        setInvoiceHeight(Math.max(1123, target.offsetHeight));
+      }
+    });
+
+    observer.observe(invoiceEl);
+    return () => observer.disconnect();
+  }, [invoice]);
+
   const subtotal = invoice.items.reduce((sum, item) => sum + item.amount, 0);
   const discountAmount = subtotal * (invoice.discountPercent / 100);
   const taxAmount = (subtotal - discountAmount) * (invoice.taxPercent / 100);
@@ -48,13 +85,23 @@ export default function InvoicePreview({ invoice }: { invoice: Invoice }) {
   };
 
   return (
-    <div className="bg-gray-200 p-2 sm:p-4 md:p-8 rounded-xl flex justify-center overflow-x-auto min-h-[800px]">
-      <div
-        id="invoice-preview"
-        className="bg-white shadow-2xl w-[210mm] min-h-[297mm] relative transform origin-top-left scale-[0.45] sm:scale-[0.6] md:scale-[0.8] lg:scale-100 mb-[-50%] sm:mb-[-30%] md:mb-[-10%] lg:mb-0"
-        style={{ width: '210mm', minHeight: '297mm' }} // A4 dimensions
+    <div ref={containerRef} className="bg-gray-200 p-2 sm:p-4 md:p-8 rounded-xl flex justify-center overflow-hidden w-full">
+      <div 
+        className="relative shrink-0 transition-all duration-200 w-full"
+        style={{ height: `${invoiceHeight * scale}px` }}
       >
-        {renderTemplate()}
+        <div
+          id="invoice-preview"
+          ref={invoiceRef}
+          className="bg-white shadow-2xl absolute top-0 left-1/2 origin-top"
+          style={{ 
+            width: '794px', 
+            minHeight: '1123px',
+            transform: `translateX(-50%) scale(${scale})`
+          }}
+        >
+          {renderTemplate()}
+        </div>
       </div>
     </div>
   );
