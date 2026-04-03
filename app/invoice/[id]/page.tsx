@@ -7,8 +7,6 @@ import InvoiceEditor from '@/components/InvoiceEditor';
 import InvoicePreview from '@/components/InvoicePreview';
 import AIAssistant from '@/components/AIAssistant';
 import { ArrowLeft, Download, Eye, Edit3, Sparkles, Mail } from 'lucide-react';
-import { toPng } from 'html-to-image';
-import jsPDF from 'jspdf';
 
 export default function InvoicePage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -50,8 +48,30 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
   const handleDownloadPDF = async () => {
     setIsGeneratingPDF(true);
     try {
-      const element = document.getElementById('invoice-preview');
-      if (!element) return;
+      const sourceElement = document.getElementById('invoice-preview');
+      const targetElement = document.getElementById('pdf-render-target');
+      
+      if (!sourceElement || !targetElement) return;
+
+      // Copy HTML
+      targetElement.innerHTML = sourceElement.innerHTML;
+
+      // Fix inline styles on the template
+      const allElements = targetElement.querySelectorAll('*');
+      allElements.forEach((el) => {
+        const htmlEl = el as HTMLElement;
+        htmlEl.style.maxWidth = 'none';
+        
+        // Remove overflow hidden if it exists
+        if (getComputedStyle(htmlEl).overflow === 'hidden') {
+          htmlEl.style.overflow = 'visible';
+        }
+        
+        // Ensure tables are full width
+        if (htmlEl.tagName.toLowerCase() === 'table') {
+          htmlEl.style.width = '100%';
+        }
+      });
 
       // Ensure fonts are loaded
       await document.fonts.ready;
@@ -59,60 +79,30 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
       // Ensure the element is fully rendered before capturing
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      // Workaround for viewport cropping bug
-      const originalScrollY = window.scrollY;
-      const parentElement = element.parentElement;
-      const originalParentScrollX = parentElement ? parentElement.scrollLeft : 0;
-      const originalParentScrollY = parentElement ? parentElement.scrollTop : 0;
-      
-      window.scrollTo(0, 0);
-      if (parentElement) {
-        parentElement.scrollTo(0, 0);
-      }
+      // @ts-ignore
+      const html2pdf = (await import('html2pdf.js')).default;
 
-      const imgData = await toPng(element, {
-        quality: 1,
-        pixelRatio: 2,
-        backgroundColor: '#ffffff',
-        width: element.scrollWidth,
-        height: element.scrollHeight,
-        style: {
-          transform: 'scale(1)',
-          transformOrigin: 'top left',
-          width: `${element.scrollWidth}px`,
-          height: `${element.scrollHeight}px`,
+      const options = {
+        margin: [10, 10, 10, 10] as [number, number, number, number],
+        filename: `${invoice.invoiceNumber}_${invoice.toName.replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg' as const, quality: 0.98 },
+        html2canvas: { 
+          scale: 2,
+          useCORS: true,
+          width: 794,
+          windowWidth: 794
+        },
+        jsPDF: { 
+          unit: 'mm' as const, 
+          format: 'a4' as const, 
+          orientation: 'portrait' as const 
         }
-      });
-      
-      // Restore scroll position
-      window.scrollTo(0, originalScrollY);
-      if (parentElement) {
-        parentElement.scrollTo(originalParentScrollX, originalParentScrollY);
-      }
+      };
 
-      // A4 width is 210 mm
-      const pdfWidth = 210;
-      
-      // Calculate the height based on the element's aspect ratio
-      // We need to get the image dimensions to calculate the exact height
-      const img = new Image();
-      img.src = imgData;
-      await new Promise((resolve) => {
-        img.onload = resolve;
-      });
-      const pdfHeight = (img.height * pdfWidth) / img.width;
+      await html2pdf().set(options).from(targetElement).save();
 
-      // Create a PDF with a custom page size that exactly matches the invoice height
-      // This prevents text overflow or clipping across multiple pages
-      const pdf = new jsPDF({
-        orientation: pdfWidth > pdfHeight ? 'landscape' : 'portrait',
-        unit: 'mm',
-        format: [pdfWidth, pdfHeight]
-      });
-
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-
-      pdf.save(`${invoice.invoiceNumber}.pdf`);
+      // Clear the target
+      targetElement.innerHTML = '';
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Failed to generate PDF. Please try again.');
@@ -287,6 +277,20 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
       <div className="text-center text-sm text-gray-400 pb-8 pt-4">
         Designed & Built by ZedTech +2348060541643
       </div>
+
+      {/* Hidden PDF Render Target */}
+      <div 
+        id="pdf-render-target" 
+        style={{
+          position: 'fixed',
+          left: '-9999px',
+          top: 0,
+          visibility: 'hidden',
+          width: '794px',
+          backgroundColor: '#ffffff',
+          padding: '40px'
+        }}
+      ></div>
     </div>
   );
 }
