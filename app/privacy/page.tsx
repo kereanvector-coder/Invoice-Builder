@@ -45,7 +45,7 @@ export default function PrivacyPage() {
 
           <section className="space-y-3 bg-white/5 p-6 rounded-2xl border border-white/10">
             <h2 className="text-xl font-bold text-white">THE SHORT VERSION:</h2>
-            <p className="text-lg">We don't collect your data. We can't see your invoices. We don't know who your clients are. That's the whole policy.</p>
+            <p className="text-lg">We don&apos;t collect your data. We can&apos;t see your invoices. We don&apos;t know who your clients are. That&apos;s the whole policy.</p>
           </section>
 
           <div className="pt-8">
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
 
               <section className="space-y-3">
                 <h3 className="text-xl font-bold text-white">3. LOCAL STORAGE</h3>
-                <p>Invoice Builda stores your business profile, saved signatures, and preferences in your browser's localStorage. This data:</p>
+                <p>Invoice Builda stores your business profile, saved signatures, and preferences in your browser&apos;s localStorage. This data:</p>
                 <ul className="list-disc pl-5 space-y-2">
                   <li>Never leaves your device</li>
                   <li>Is not accessible to us or any third party</li>
@@ -83,7 +83,7 @@ export default function PrivacyPage() {
 
               <section className="space-y-3">
                 <h3 className="text-xl font-bold text-white">4. AI PROCESSING</h3>
-                <p>When you use the AI invoice generation feature, your description text is sent to Google's Gemini API solely to generate invoice content. This transmission is governed by Google's Privacy Policy (policies.google.com/privacy). We do not store or log any prompts or responses.</p>
+                <p>When you use the AI invoice generation feature, your description text is sent to Google&apos;s Gemini API solely to generate invoice content. This transmission is governed by Google&apos;s Privacy Policy (policies.google.com/privacy). We do not store or log any prompts or responses.</p>
               </section>
 
               <section className="space-y-3">
@@ -93,22 +93,22 @@ export default function PrivacyPage() {
 
               <section className="space-y-3">
                 <h3 className="text-xl font-bold text-white">6. THIRD-PARTY SERVICES</h3>
-                <p>Invoice Builda is hosted on Netlify. Netlify may collect standard server logs (IP addresses, access times) as part of their hosting infrastructure. This is governed by Netlify's Privacy Policy (netlify.com/privacy).</p>
+                <p>Invoice Builda is hosted on Netlify. Netlify may collect standard server logs (IP addresses, access times) as part of their hosting infrastructure. This is governed by Netlify&apos;s Privacy Policy (netlify.com/privacy).</p>
               </section>
 
               <section className="space-y-3">
-                <h3 className="text-xl font-bold text-white">7. CHILDREN'S PRIVACY</h3>
+                <h3 className="text-xl font-bold text-white">7. CHILDREN&apos;S PRIVACY</h3>
                 <p>Invoice Builda is not directed at children under 13. We do not knowingly collect data from children.</p>
               </section>
 
               <section className="space-y-3">
                 <h3 className="text-xl font-bold text-white">8. YOUR RIGHTS</h3>
-                <p>Since we collect no personal data, there is nothing for us to delete, export, or correct on our end. To remove your data, simply clear your browser's localStorage.</p>
+                <p>Since we collect no personal data, there is nothing for us to delete, export, or correct on our end. To remove your data, simply clear your browser&apos;s localStorage.</p>
               </section>
 
               <section className="space-y-3">
                 <h3 className="text-xl font-bold text-white">9. CHANGES TO THIS POLICY</h3>
-                <p>We will update this page if our privacy practices change. The "last updated" date at the top will reflect any changes.</p>
+                <p>We will update this page if our privacy practices change. The &quot;last updated&quot; date at the top will reflect any changes.</p>
               </section>
 
               <section className="space-y-3">

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'motion/react';
 import { FileText, Sparkles, Download, Smartphone, ArrowRight, CheckCircle2, Zap, Shield, Globe, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import Testimonials from '@/components/landing/testimonials';
 
 const templates = [
   { name: 'Modern', color: 'from-blue-500 to-indigo-600', layout: 'header-solid', description: 'Clean and professional with a bold header.', features: ['Bold Header', 'Clear Hierarchy', 'Standard'] },
@@ -97,7 +98,7 @@ export default function LandingPage() {
             href="/dashboard" 
             className="group relative w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-black px-8 py-4 rounded-full text-lg font-semibold transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]"
           >
-            Create Your First Invoice — It's Free
+            Create Your First Invoice — It&apos;s Free
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </Link>
           <p className="text-xs text-gray-500 mt-2">
@@ -446,6 +447,8 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      <Testimonials />
 
       {/* Bento Grid Features Section */}
       <section className="py-24 relative z-10">

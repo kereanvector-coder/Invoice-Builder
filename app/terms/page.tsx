@@ -45,7 +45,7 @@ export default function TermsPage() {
 
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-white">1. ACCEPTANCE OF TERMS</h2>
-            <p>By accessing or using Invoice Builda ("the Service"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.</p>
+            <p>By accessing or using Invoice Builda (&quot;the Service&quot;), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.</p>
           </section>
 
           <section className="space-y-3">
@@ -86,7 +86,7 @@ export default function TermsPage() {
 
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-white">8. DISCLAIMER OF WARRANTIES</h2>
-            <p>Invoice Builda is provided "as is" without warranties of any kind, express or implied. We do not warrant that the Service will be uninterrupted, error-free, or suitable for any particular purpose.</p>
+            <p>Invoice Builda is provided &quot;as is&quot; without warranties of any kind, express or implied. We do not warrant that the Service will be uninterrupted, error-free, or suitable for any particular purpose.</p>
           </section>
 
           <section className="space-y-3">
