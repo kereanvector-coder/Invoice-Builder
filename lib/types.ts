@@ -41,6 +41,7 @@ export interface Invoice {
   currency: Currency;
   
   logoUrl?: string;
+  signatureUrl?: string;
   
   fromName: string;
   fromEmail: string;

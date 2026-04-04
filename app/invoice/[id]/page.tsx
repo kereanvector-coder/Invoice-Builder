@@ -56,20 +56,61 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
       // Copy HTML
       targetElement.innerHTML = sourceElement.innerHTML;
 
+      // Make the root template element stretch to fill the A4 page
+      if (targetElement.firstElementChild) {
+        const rootEl = targetElement.firstElementChild as HTMLElement;
+        rootEl.style.flexGrow = '1';
+        rootEl.style.width = '100%';
+      }
+
+      // Helper to convert any color to RGBA using Canvas
+      const canvas = document.createElement('canvas');
+      canvas.width = 1;
+      canvas.height = 1;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      
+      const convertColorToRgba = (color: string) => {
+        if (!ctx || !color) return color;
+        ctx.clearRect(0, 0, 1, 1);
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, 1, 1);
+        const data = ctx.getImageData(0, 0, 1, 1).data;
+        return `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3] / 255})`;
+      };
+
+      const convertOklchInString = (str: string) => {
+        if (!str || (!str.includes('oklch') && !str.includes('color('))) return str;
+        return str.replace(/(oklch\([^)]+\)|color\([^)]+\))/g, (match) => {
+          return convertColorToRgba(match);
+        });
+      };
+
       // Fix inline styles on the template
       const allElements = targetElement.querySelectorAll('*');
       allElements.forEach((el) => {
         const htmlEl = el as HTMLElement;
         htmlEl.style.maxWidth = 'none';
         
+        const computedStyle = getComputedStyle(htmlEl);
+        
         // Remove overflow hidden if it exists
-        if (getComputedStyle(htmlEl).overflow === 'hidden') {
+        if (computedStyle.overflow === 'hidden') {
           htmlEl.style.overflow = 'visible';
         }
         
         // Ensure tables are full width
         if (htmlEl.tagName.toLowerCase() === 'table') {
           htmlEl.style.width = '100%';
+        }
+
+        // Convert oklch colors to rgba for html2canvas compatibility
+        // Iterate over all computed properties to catch boxShadow, textShadow, etc.
+        for (let i = 0; i < computedStyle.length; i++) {
+          const prop = computedStyle[i];
+          const val = computedStyle.getPropertyValue(prop);
+          if (val && (val.includes('oklch') || val.includes('color('))) {
+            htmlEl.style.setProperty(prop, convertOklchInString(val), computedStyle.getPropertyPriority(prop));
+          }
         }
       });
 
@@ -90,7 +131,9 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
           scale: 2,
           useCORS: true,
           width: 794,
-          windowWidth: 794
+          windowWidth: 794,
+          scrollY: 0,
+          scrollX: 0
         },
         jsPDF: { 
           unit: 'mm' as const, 
@@ -282,18 +325,18 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
       </div>
 
       {/* Hidden PDF Render Target */}
-      <div 
-        id="pdf-render-target" 
-        style={{
-          position: 'fixed',
-          left: '-9999px',
-          top: 0,
-          visibility: 'hidden',
-          width: '794px',
-          backgroundColor: '#ffffff',
-          padding: '40px'
-        }}
-      ></div>
+      <div style={{ position: 'absolute', left: '-9999px', top: '-9999px', overflow: 'visible' }}>
+        <div 
+          id="pdf-render-target" 
+          style={{
+            width: '794px',
+            minHeight: '1123px',
+            backgroundColor: '#ffffff',
+            display: 'flex',
+            flexDirection: 'column'
+          }}
+        ></div>
+      </div>
     </div>
   );
 }

@@ -33,7 +33,7 @@ export default function LandingPage() {
             <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(99,102,241,0.5)] group-hover:shadow-[0_0_25px_rgba(99,102,241,0.6)] transition-shadow duration-500">
               <FileText size={18} className="text-white" />
             </div>
-            <span className="font-bold text-xl tracking-tight text-white">Invoicer</span>
+            <span className="font-bold text-xl tracking-tight text-white">Invoice Builda</span>
           </Link>
           <div className="flex items-center gap-6">
             <Link 
@@ -75,7 +75,7 @@ export default function LandingPage() {
           transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-white mb-8 max-w-5xl leading-[1.05]"
         >
-          Invoicing, reimagined for the <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">AI era.</span>
+          Stop chasing payments. Start sending invoices that demand to be paid.
         </motion.h1>
 
         <motion.p 
@@ -84,22 +84,25 @@ export default function LandingPage() {
           transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="text-lg md:text-xl text-gray-400 mb-12 max-w-2xl leading-relaxed font-light tracking-wide"
         >
-          Generate pixel-perfect, professional invoices in seconds. Describe your work in plain English and let our AI handle the line items, taxes, and formatting.
+          Unprofessional invoices get ignored. Invoice Builda helps freelancers and small businesses create stunning, AI-generated invoices in under 60 seconds — no account, no learning curve, no stress.
         </motion.p>
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto z-10"
+          className="flex flex-col items-center gap-4 w-full sm:w-auto z-10"
         >
           <Link 
             href="/dashboard" 
             className="group relative w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-black px-8 py-4 rounded-full text-lg font-semibold transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]"
           >
-            Start Invoicing Free
+            Create Your First Invoice — It's Free
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </Link>
+          <p className="text-xs text-gray-500 mt-2">
+            No signup required · Works on your phone · PDF download in one tap
+          </p>
         </motion.div>
 
         {/* Hero Image Mockup */}
@@ -465,8 +468,8 @@ export default function LandingPage() {
                 <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center mb-6">
                   <Sparkles className="text-indigo-400" size={24} />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">AI-Powered Generation</h3>
-                <p className="text-gray-400 max-w-md">Type &quot;Built a website for 50 hours at $100/hr&quot; and watch as our AI instantly creates perfectly formatted line items, calculates totals, and applies taxes.</p>
+                <h3 className="text-2xl font-bold text-white mb-2">AI fills it for you</h3>
+                <p className="text-gray-400 max-w-md">Type what you did in plain English. Invoice Builda extracts the client, line items, amounts, and due date automatically. No forms. No guesswork.</p>
               </div>
               <div className="mt-8 p-4 rounded-xl bg-black/50 border border-white/5 font-mono text-sm text-gray-300">
                 <span className="text-indigo-400">Prompt:</span> &quot;Redesigned landing page, 12 hours at $150/hr&quot;
@@ -475,7 +478,7 @@ export default function LandingPage() {
               </div>
             </motion.div>
 
-            {/* Feature 2: PDF Export */}
+            {/* Feature 2: Templates */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -485,14 +488,14 @@ export default function LandingPage() {
             >
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center mb-6">
-                  <Download className="text-blue-400" size={24} />
+                  <FileText className="text-blue-400" size={24} />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">1-Click PDF</h3>
-                <p className="text-gray-400">Generate pixel-perfect, print-ready PDFs instantly without leaving your browser.</p>
+                <h3 className="text-2xl font-bold text-white mb-2">12+ professional templates</h3>
+                <p className="text-gray-400">Pick a design that matches your brand. Every template is print-ready, mobile-optimized, and looks like it cost a designer a week to build.</p>
               </div>
             </motion.div>
 
-            {/* Feature 3: Mobile Ready */}
+            {/* Feature 4: PDF Export */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -502,14 +505,14 @@ export default function LandingPage() {
             >
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center mb-6">
-                  <Smartphone className="text-purple-400" size={24} />
+                  <Download className="text-purple-400" size={24} />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">Mobile Native</h3>
-                <p className="text-gray-400">Create, edit, and send invoices on the go. Our editor is fully optimized for your phone.</p>
+                <h3 className="text-2xl font-bold text-white mb-2">One tap to PDF</h3>
+                <p className="text-gray-400">Download a pixel-perfect, print-ready PDF instantly. Send it by email, WhatsApp, or any channel your client uses.</p>
               </div>
             </motion.div>
 
-            {/* Feature 4: Wide Card */}
+            {/* Feature 3: Wide Card */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -521,8 +524,8 @@ export default function LandingPage() {
                 <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mb-6">
                   <Shield className="text-emerald-400" size={24} />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">Private & Secure</h3>
-                <p className="text-gray-400 max-w-md">No sign-up required. Your data is stored securely in your browser. We don&apos;t track your clients or your revenue.</p>
+                <h3 className="text-2xl font-bold text-white mb-2">Your data never leaves your device</h3>
+                <p className="text-gray-400 max-w-md">No account means no data collection. Your invoices, your clients, your revenue — stored locally in your browser. We genuinely cannot see any of it.</p>
               </div>
               <div className="flex-1 w-full flex justify-end">
                  <div className="w-full max-w-[200px] h-32 bg-black/50 border border-white/10 rounded-xl p-4 flex flex-col gap-3">
@@ -586,19 +589,18 @@ export default function LandingPage() {
               <div className="w-6 h-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded flex items-center justify-center">
                 <FileText size={12} className="text-white" />
               </div>
-              <span className="font-semibold text-white tracking-tight">Invoicer</span>
+              <span className="font-semibold text-white tracking-tight">Invoice Builda</span>
             </div>
             <div className="text-gray-500 text-sm mt-2">
-              Designed & Built by ZedTech +2348060541643
+              Designed & Built by ZedTech <a href="mailto:zedirastudio@gmail.com" className="hover:text-white transition-colors">zedirastudio@gmail.com</a>
             </div>
           </div>
           <div className="text-gray-500 text-sm">
-            &copy; {new Date().getFullYear()} Zedtech. All rights reserved.
+            &copy; 2026 Invoice Builda by ZedTech. All rights reserved.
           </div>
           <div className="flex gap-6 text-sm text-gray-500">
-            <a href="#" className="hover:text-white transition-colors">Twitter</a>
-            <a href="#" className="hover:text-white transition-colors">GitHub</a>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
           </div>
         </div>
       </footer>

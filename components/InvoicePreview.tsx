@@ -204,16 +204,26 @@ function ClassicTemplate({ invoice, formatCurrency, subtotal, discountAmount, ta
       </div>
 
       <div className="grid grid-cols-2 gap-8 text-sm text-slate-500 border-t border-slate-200 pt-8 mt-auto">
-        {invoice.notes && (
-          <div>
-            <h4 className="font-bold text-slate-900 mb-2 uppercase tracking-wider text-xs">Notes</h4>
-            <p className="whitespace-pre-wrap leading-relaxed">{invoice.notes}</p>
-          </div>
-        )}
-        {invoice.paymentInfo && (
-          <div>
-            <h4 className="font-bold text-slate-900 mb-2 uppercase tracking-wider text-xs">Payment Information</h4>
-            <p className="whitespace-pre-wrap leading-relaxed">{invoice.paymentInfo}</p>
+        <div className="space-y-6">
+          {invoice.notes && (
+            <div>
+              <h4 className="font-bold text-slate-900 mb-2 uppercase tracking-wider text-xs">Notes</h4>
+              <p className="whitespace-pre-wrap leading-relaxed">{invoice.notes}</p>
+            </div>
+          )}
+          {invoice.paymentInfo && (
+            <div>
+              <h4 className="font-bold text-slate-900 mb-2 uppercase tracking-wider text-xs">Payment Information</h4>
+              <p className="whitespace-pre-wrap leading-relaxed">{invoice.paymentInfo}</p>
+            </div>
+          )}
+        </div>
+        {invoice.signatureUrl && (
+          <div className="flex flex-col items-end justify-end">
+            <div className="w-48 text-center">
+              <img src={invoice.signatureUrl} alt="Signature" className="max-h-20 object-contain mx-auto mb-2" />
+              <div className="border-t border-slate-300 pt-2 text-xs uppercase tracking-wider text-slate-400">Authorized Signature</div>
+            </div>
           </div>
         )}
       </div>
@@ -297,17 +307,25 @@ function MinimalTemplate({ invoice, formatCurrency, subtotal, discountAmount, ta
         </div>
       </div>
 
-      <div className="text-sm text-slate-500 max-w-xl space-y-8 mt-auto">
-        {invoice.notes && (
-          <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-slate-300 mb-3">Notes</div>
-            <div className="leading-relaxed">{invoice.notes}</div>
-          </div>
-        )}
-        {invoice.paymentInfo && (
-          <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-slate-300 mb-3">Payment Info</div>
-            <div className="leading-relaxed">{invoice.paymentInfo}</div>
+      <div className="flex justify-between items-end mt-auto">
+        <div className="text-sm text-slate-500 max-w-xl space-y-8">
+          {invoice.notes && (
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-slate-300 mb-3">Notes</div>
+              <div className="leading-relaxed">{invoice.notes}</div>
+            </div>
+          )}
+          {invoice.paymentInfo && (
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-slate-300 mb-3">Payment Info</div>
+              <div className="leading-relaxed">{invoice.paymentInfo}</div>
+            </div>
+          )}
+        </div>
+        {invoice.signatureUrl && (
+          <div className="w-48 text-right">
+            <img src={invoice.signatureUrl} alt="Signature" className="max-h-20 object-contain ml-auto mb-2" />
+            <div className="text-xs font-bold uppercase tracking-widest text-slate-300">Signature</div>
           </div>
         )}
       </div>
@@ -398,9 +416,17 @@ function BoldTemplate({ invoice, formatCurrency, subtotal, discountAmount, taxAm
           </div>
         </div>
 
-        <div className="text-sm font-medium text-gray-600 bg-gray-50 p-6 rounded-xl border border-gray-100 mt-auto">
-          {invoice.notes && <div className="mb-4"><span className="font-black text-black uppercase tracking-widest text-xs block mb-2">Notes</span>{invoice.notes}</div>}
-          {invoice.paymentInfo && <div><span className="font-black text-black uppercase tracking-widest text-xs block mb-2">Payment Info</span>{invoice.paymentInfo}</div>}
+        <div className="flex justify-between items-end mt-auto">
+          <div className="text-sm font-medium text-gray-600 bg-gray-50 p-6 rounded-xl border border-gray-100 flex-1 mr-8">
+            {invoice.notes && <div className="mb-4"><span className="font-black text-black uppercase tracking-widest text-xs block mb-2">Notes</span>{invoice.notes}</div>}
+            {invoice.paymentInfo && <div><span className="font-black text-black uppercase tracking-widest text-xs block mb-2">Payment Info</span>{invoice.paymentInfo}</div>}
+          </div>
+          {invoice.signatureUrl && (
+            <div className="w-48 text-right">
+              <img src={invoice.signatureUrl} alt="Signature" className="max-h-20 object-contain ml-auto mb-2" />
+              <div className="font-black text-black uppercase tracking-widest text-xs">Signature</div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -512,16 +538,26 @@ function CorporateTemplate({ invoice, formatCurrency, subtotal, discountAmount, 
       </div>
 
       <div className="grid grid-cols-2 gap-8 border-t border-slate-200 pt-8 text-sm mt-auto">
-        {invoice.paymentInfo && (
-          <div>
-            <strong className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Payment Instructions</strong>
-            <p className="whitespace-pre-wrap text-slate-600 leading-relaxed">{invoice.paymentInfo}</p>
-          </div>
-        )}
-        {invoice.notes && (
-          <div>
-            <strong className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Notes</strong>
-            <p className="whitespace-pre-wrap text-slate-600 leading-relaxed">{invoice.notes}</p>
+        <div className="space-y-6">
+          {invoice.paymentInfo && (
+            <div>
+              <strong className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Payment Instructions</strong>
+              <p className="whitespace-pre-wrap text-slate-600 leading-relaxed">{invoice.paymentInfo}</p>
+            </div>
+          )}
+          {invoice.notes && (
+            <div>
+              <strong className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Notes</strong>
+              <p className="whitespace-pre-wrap text-slate-600 leading-relaxed">{invoice.notes}</p>
+            </div>
+          )}
+        </div>
+        {invoice.signatureUrl && (
+          <div className="flex flex-col items-end justify-end">
+            <div className="w-48 text-right">
+              <img src={invoice.signatureUrl} alt="Signature" className="max-h-20 object-contain ml-auto mb-2" />
+              <div className="border-t border-slate-300 pt-2 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">Authorized Signature</div>
+            </div>
           </div>
         )}
       </div>
@@ -611,16 +647,26 @@ function CreativeTemplate({ invoice, formatCurrency, subtotal, discountAmount, t
         </div>
 
         <div className="grid grid-cols-2 gap-8 text-sm mt-auto">
-          {invoice.notes && (
-            <div className="bg-white p-6 rounded-2xl shadow-sm border-2 border-indigo-50">
-              <h4 className="font-black text-indigo-600 mb-2 uppercase tracking-widest text-xs">Notes</h4>
-              <p className="text-slate-600 whitespace-pre-wrap font-medium">{invoice.notes}</p>
-            </div>
-          )}
-          {invoice.paymentInfo && (
-            <div className="bg-white p-6 rounded-2xl shadow-sm border-2 border-indigo-50">
-              <h4 className="font-black text-indigo-600 mb-2 uppercase tracking-widest text-xs">Payment Details</h4>
-              <p className="text-slate-600 whitespace-pre-wrap font-medium">{invoice.paymentInfo}</p>
+          <div className="space-y-6">
+            {invoice.notes && (
+              <div className="bg-white p-6 rounded-2xl shadow-sm border-2 border-indigo-50">
+                <h4 className="font-black text-indigo-600 mb-2 uppercase tracking-widest text-xs">Notes</h4>
+                <p className="text-slate-600 whitespace-pre-wrap font-medium">{invoice.notes}</p>
+              </div>
+            )}
+            {invoice.paymentInfo && (
+              <div className="bg-white p-6 rounded-2xl shadow-sm border-2 border-indigo-50">
+                <h4 className="font-black text-indigo-600 mb-2 uppercase tracking-widest text-xs">Payment Details</h4>
+                <p className="text-slate-600 whitespace-pre-wrap font-medium">{invoice.paymentInfo}</p>
+              </div>
+            )}
+          </div>
+          {invoice.signatureUrl && (
+            <div className="flex flex-col items-end justify-end">
+              <div className="w-48 text-right">
+                <img src={invoice.signatureUrl} alt="Signature" className="max-h-20 object-contain ml-auto mb-2" />
+                <div className="font-black text-indigo-600 uppercase tracking-widest text-xs">Signature</div>
+              </div>
             </div>
           )}
         </div>
@@ -712,17 +758,25 @@ function MonospaceTemplate({ invoice, formatCurrency, subtotal, discountAmount, 
           </div>
         </div>
 
-        <div className="text-sm border-t-4 border-black pt-8 mt-auto">
-          {invoice.notes && (
-            <div className="mb-4">
-              <span className="font-bold uppercase bg-black text-white px-2 py-1 mr-2 inline-block mb-2">NOTES</span>
-              <div className="whitespace-pre-wrap">{invoice.notes}</div>
-            </div>
-          )}
-          {invoice.paymentInfo && (
-            <div>
-              <span className="font-bold uppercase bg-black text-white px-2 py-1 mr-2 inline-block mb-2">PAYMENT</span>
-              <div className="whitespace-pre-wrap">{invoice.paymentInfo}</div>
+        <div className="flex justify-between items-end mt-auto">
+          <div className="text-sm border-t-4 border-black pt-8 flex-1 mr-8">
+            {invoice.notes && (
+              <div className="mb-4">
+                <span className="font-bold uppercase bg-black text-white px-2 py-1 mr-2 inline-block mb-2">NOTES</span>
+                <div className="whitespace-pre-wrap">{invoice.notes}</div>
+              </div>
+            )}
+            {invoice.paymentInfo && (
+              <div>
+                <span className="font-bold uppercase bg-black text-white px-2 py-1 mr-2 inline-block mb-2">PAYMENT</span>
+                <div className="whitespace-pre-wrap">{invoice.paymentInfo}</div>
+              </div>
+            )}
+          </div>
+          {invoice.signatureUrl && (
+            <div className="w-48 text-right border-t-4 border-black pt-8">
+              <img src={invoice.signatureUrl} alt="Signature" className="max-h-20 object-contain ml-auto mb-2" />
+              <div className="font-bold uppercase bg-black text-white px-2 py-1 inline-block">SIGNATURE</div>
             </div>
           )}
         </div>
@@ -823,16 +877,28 @@ function FuturisticTemplate({ invoice, formatCurrency, subtotal, discountAmount,
         </div>
 
         <div className="grid grid-cols-2 gap-8 text-sm mt-auto">
-          {invoice.notes && (
-            <div>
-              <h4 className="font-bold text-cyan-500 mb-2 uppercase tracking-widest text-xs">Notes</h4>
-              <p className="text-slate-400 whitespace-pre-wrap">{invoice.notes}</p>
-            </div>
-          )}
-          {invoice.paymentInfo && (
-            <div>
-              <h4 className="font-bold text-cyan-500 mb-2 uppercase tracking-widest text-xs">Payment Details</h4>
-              <p className="text-slate-400 whitespace-pre-wrap">{invoice.paymentInfo}</p>
+          <div className="space-y-6">
+            {invoice.notes && (
+              <div>
+                <h4 className="font-bold text-cyan-500 mb-2 uppercase tracking-widest text-xs">Notes</h4>
+                <p className="text-slate-400 whitespace-pre-wrap">{invoice.notes}</p>
+              </div>
+            )}
+            {invoice.paymentInfo && (
+              <div>
+                <h4 className="font-bold text-cyan-500 mb-2 uppercase tracking-widest text-xs">Payment Details</h4>
+                <p className="text-slate-400 whitespace-pre-wrap">{invoice.paymentInfo}</p>
+              </div>
+            )}
+          </div>
+          {invoice.signatureUrl && (
+            <div className="flex flex-col items-end justify-end">
+              <div className="w-48 text-right">
+                <div className="bg-slate-900 rounded-lg p-2 mb-2 border border-slate-800">
+                  <img src={invoice.signatureUrl} alt="Signature" className="max-h-16 object-contain ml-auto filter invert" />
+                </div>
+                <div className="font-bold text-cyan-500 uppercase tracking-widest text-xs">Digital Signature</div>
+              </div>
             </div>
           )}
         </div>
@@ -935,13 +1001,21 @@ function EcommerceTemplate({ invoice, formatCurrency, subtotal, discountAmount, 
           </div>
         </div>
 
-        <div className="flex justify-between items-center text-sm text-gray-500 mt-auto">
+        <div className="flex justify-between items-end text-sm text-gray-500 mt-auto">
           <div>
-            <span className="font-medium text-gray-900 mr-2">Date:</span> {format(new Date(invoice.issueDate), 'MMM dd, yyyy')}
+            <div className="mb-2">
+              <span className="font-medium text-gray-900 mr-2">Date:</span> {format(new Date(invoice.issueDate), 'MMM dd, yyyy')}
+            </div>
+            {invoice.paymentInfo && (
+              <div>
+                <span className="font-medium text-gray-900 mr-2">Payment Method:</span> {invoice.paymentInfo}
+              </div>
+            )}
           </div>
-          {invoice.paymentInfo && (
-            <div className="text-right">
-              <span className="font-medium text-gray-900 mr-2">Payment Method:</span> {invoice.paymentInfo}
+          {invoice.signatureUrl && (
+            <div className="w-48 text-right">
+              <img src={invoice.signatureUrl} alt="Signature" className="max-h-16 object-contain ml-auto mb-1" />
+              <div className="font-medium text-gray-900 text-xs uppercase tracking-wider">Authorized Signature</div>
             </div>
           )}
         </div>
@@ -1041,9 +1115,18 @@ function ElegantTemplate({ invoice, formatCurrency, subtotal, discountAmount, ta
           </div>
         </div>
 
-        <div className="text-center text-sm text-[#7f8c8d] mt-auto">
-          {invoice.notes && <p className="mb-4 italic">&quot;{invoice.notes}&quot;</p>}
-          {invoice.paymentInfo && <p className="font-sans text-xs tracking-wider uppercase">{invoice.paymentInfo}</p>}
+        <div className="flex justify-between items-end mt-auto">
+          <div className="text-center text-sm text-[#7f8c8d] flex-1">
+            {invoice.notes && <p className="mb-4 italic">&quot;{invoice.notes}&quot;</p>}
+            {invoice.paymentInfo && <p className="font-sans text-xs tracking-wider uppercase">{invoice.paymentInfo}</p>}
+          </div>
+          {invoice.signatureUrl && (
+            <div className="w-48 text-center ml-8">
+              <img src={invoice.signatureUrl} alt="Signature" className="max-h-20 object-contain mx-auto mb-2" />
+              <div className="w-32 h-[1px] bg-[#d5d1c8] mx-auto mb-2"></div>
+              <div className="font-sans text-xs tracking-wider uppercase text-[#95a5a6]">Signature</div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -1136,9 +1219,15 @@ function StartupTemplate({ invoice, formatCurrency, subtotal, discountAmount, ta
             </div>
           )}
           {invoice.notes && (
-            <div>
+            <div className="mb-6">
               <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Notes</h4>
               <p className="text-sm text-gray-600 whitespace-pre-wrap">{invoice.notes}</p>
+            </div>
+          )}
+          {invoice.signatureUrl && (
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Signature</h4>
+              <img src={invoice.signatureUrl} alt="Signature" className="max-h-16 object-contain" />
             </div>
           )}
         </div>
@@ -1261,9 +1350,15 @@ function ModernTemplate({ invoice, formatCurrency, subtotal, discountAmount, tax
             </div>
           )}
           {invoice.notes && (
-            <div>
+            <div className="mb-6">
               <h4 className="text-sm font-bold text-gray-900 mb-2">Notes</h4>
               <p className="text-sm text-gray-600 whitespace-pre-wrap">{invoice.notes}</p>
+            </div>
+          )}
+          {invoice.signatureUrl && (
+            <div>
+              <h4 className="text-sm font-bold text-gray-900 mb-2">Signature</h4>
+              <img src={invoice.signatureUrl} alt="Signature" className="max-h-16 object-contain" />
             </div>
           )}
         </div>
@@ -1386,13 +1481,23 @@ function PlayfulTemplate({ invoice, formatCurrency, subtotal, discountAmount, ta
             </div>
           )}
           {invoice.notes && (
-            <div>
+            <div className="mb-6">
               <div className="inline-block bg-yellow-100 text-yellow-800 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3 transform -rotate-1">
                 Notes
               </div>
               <p className="text-sm text-gray-700 whitespace-pre-wrap font-medium leading-relaxed">
                 {invoice.notes}
               </p>
+            </div>
+          )}
+          {invoice.signatureUrl && (
+            <div>
+              <div className="inline-block bg-purple-100 text-purple-800 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3 transform rotate-2">
+                Signature
+              </div>
+              <div className="bg-white/80 backdrop-blur-sm p-4 rounded-3xl shadow-sm border border-white/50 inline-block">
+                <img src={invoice.signatureUrl} alt="Signature" className="max-h-16 object-contain" />
+              </div>
             </div>
           )}
         </div>

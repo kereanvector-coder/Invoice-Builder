@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
 import { Invoice, Currency, InvoiceTemplate, InvoiceStatus, Client } from '@/lib/types';
-import { Plus, Trash2, Upload, Save, X, Settings } from 'lucide-react';
+import { Plus, Trash2, Upload, Save, X, Settings, PenTool } from 'lucide-react';
+import SignaturePad from 'signature_pad';
 
 const CURRENCIES: { code: Currency; symbol: string; name: string }[] = [
   { code: 'USD', symbol: '$', name: 'US Dollar' },
@@ -54,6 +55,74 @@ export default function InvoiceEditor({ invoice }: { invoice: Invoice }) {
   
   const [isNumberingModalOpen, setIsNumberingModalOpen] = useState(false);
   const [numberingForm, setNumberingForm] = useState({ prefix: invoicePrefix, nextNumber: invoiceNextNumber });
+
+  const [isSignatureModalOpen, setIsSignatureModalOpen] = useState(false);
+  const [signatureTab, setSignatureTab] = useState<'draw' | 'upload'>('draw');
+  const signaturePadRef = useRef<SignaturePad | null>(null);
+
+  const initSignaturePad = () => {
+    const canvas = document.getElementById('sig-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    
+    // Step 1: Resize FIRST (canvas must be visible at this point)
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.scale(ratio, ratio);
+    }
+    
+    // Step 2: Destroy existing instance if one exists
+    if (signaturePadRef.current) {
+      signaturePadRef.current.off();
+      signaturePadRef.current = null;
+    }
+    
+    // Step 3: Create fresh instance AFTER resize
+    signaturePadRef.current = new SignaturePad(canvas, {
+      backgroundColor: 'rgb(255,255,255)',
+      penColor: 'rgb(0,0,0)',
+      minWidth: 1,
+      maxWidth: 3
+    });
+  };
+
+  useEffect(() => {
+    if (isSignatureModalOpen && signatureTab === 'draw') {
+      setTimeout(() => initSignaturePad(), 50);
+    }
+  }, [isSignatureModalOpen, signatureTab]);
+
+  const handleSaveSignature = () => {
+    if (signatureTab === 'draw' && signaturePadRef.current) {
+      if (signaturePadRef.current.isEmpty()) {
+        alert('Please provide a signature first.');
+        return;
+      }
+      const dataUrl = signaturePadRef.current.toDataURL('image/png');
+      updateInvoice(invoice.id, { signatureUrl: dataUrl });
+    }
+    setIsSignatureModalOpen(false);
+  };
+
+  const handleClearSignature = () => {
+    if (signaturePadRef.current) {
+      signaturePadRef.current.clear();
+    }
+  };
+
+  const handleSignatureUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        updateInvoice(invoice.id, { signatureUrl: reader.result as string });
+        setIsSignatureModalOpen(false);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSaveNumbering = () => {
     updateSettings({
@@ -547,7 +616,16 @@ export default function InvoiceEditor({ invoice }: { invoice: Invoice }) {
 
       {/* Notes Section */}
       <section className="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-100">
-        <h2 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Additional Information</h2>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
+          <h2 className="text-base md:text-lg font-semibold text-gray-900">Additional Information</h2>
+          <button 
+            onClick={() => setIsSignatureModalOpen(true)}
+            className="flex items-center gap-2 text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors self-start"
+          >
+            <PenTool size={16} />
+            {invoice.signatureUrl ? 'Change Signature' : 'Add Signature'}
+          </button>
+        </div>
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
@@ -702,6 +780,104 @@ export default function InvoiceEditor({ invoice }: { invoice: Invoice }) {
               >
                 Save Settings
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Signature Modal */}
+      {isSignatureModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="flex justify-between items-center p-4 border-b border-gray-100">
+              <h3 className="text-lg font-semibold text-gray-900">Signature</h3>
+              <button
+                onClick={() => setIsSignatureModalOpen(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="flex border-b border-gray-100">
+              <button
+                className={`flex-1 py-3 text-sm font-medium text-center ${signatureTab === 'draw' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                onClick={() => setSignatureTab('draw')}
+              >
+                Draw
+              </button>
+              <button
+                className={`flex-1 py-3 text-sm font-medium text-center ${signatureTab === 'upload' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                onClick={() => setSignatureTab('upload')}
+              >
+                Upload
+              </button>
+            </div>
+
+            <div className="p-4 flex-1 overflow-y-auto">
+              {signatureTab === 'draw' ? (
+                <div className="space-y-4">
+                  <div className="border border-gray-300 rounded-lg overflow-hidden bg-gray-50">
+                    <canvas 
+                      id="sig-canvas" 
+                      className="w-full touch-none cursor-crosshair"
+                      style={{ height: '200px' }}
+                    ></canvas>
+                  </div>
+                  <div className="flex justify-end">
+                    <button 
+                      onClick={handleClearSignature}
+                      className="text-sm text-gray-500 hover:text-gray-700"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:bg-gray-50 transition-colors relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleSignatureUpload}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                    <p className="text-sm text-gray-600">Click or drag image to upload</p>
+                    <p className="text-xs text-gray-500 mt-1">PNG, JPG up to 2MB</p>
+                  </div>
+                  {invoice.signatureUrl && (
+                    <div className="mt-4">
+                      <p className="text-sm font-medium text-gray-700 mb-2">Current Signature:</p>
+                      <div className="border border-gray-200 rounded-lg p-4 bg-white flex justify-center">
+                        <img src={invoice.signatureUrl} alt="Signature" className="max-h-24 object-contain" />
+                      </div>
+                      <button 
+                        onClick={() => updateInvoice(invoice.id, { signatureUrl: undefined })}
+                        className="mt-2 text-sm text-red-600 hover:text-red-800"
+                      >
+                        Remove Signature
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+              <button
+                onClick={() => setIsSignatureModalOpen(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              {signatureTab === 'draw' && (
+                <button
+                  onClick={handleSaveSignature}
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Save Signature
+                </button>
+              )}
             </div>
           </div>
         </div>
